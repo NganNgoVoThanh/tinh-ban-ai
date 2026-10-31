@@ -34,7 +34,7 @@
     "qrcode": "1.5.4",
     "radix-ui": "1.8.1",
     "react": "19.3.0",
-    "react-dom": "19.3.0",
+    "react-dom": "19.3.1",
     "server-only": "0.0.1",
     "serwist": "9.5.13",
     "shadcn": "4.23.0",
