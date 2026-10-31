@@ -1,0 +1,23 @@
+{
+  "name": "@tinhban/sample-charts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "gen": "node --experimental-strip-types --no-warnings gen.ts",
+    "coverage": "node --experimental-strip-types --no-warnings coverage.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@tinhban/calendar": "workspace:*",
+    "@tinhban/chart-engine": "workspace:*",
+    "@tinhban/kb": "workspace:*",
+    "@tinhban/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "typescript": "6.0.3",
+    "vitest": "5.0.4"
+  }
+}

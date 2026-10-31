@@ -1,0 +1,11 @@
+{
+  "name": "tinh-ban-ai",
+  "private": true,
+  "packageManager": "pnpm@10.15.0",
+  "scripts": {
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck",
+    "check:deps": "node tools/ci/check-deps.mjs",
+    "scan:bundle": "node tools/ci/scan-bundle.mjs apps/web"
+  }
+}

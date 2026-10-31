@@ -1,0 +1,12 @@
+rule_id: TV.MENH.VCD.001
+schools: [nam]
+version: 1
+kind: interpretation
+topic: personality
+conditions: { palace: menh, no_major: true }
+headline: "Câu mẫu về Mệnh vô chính diệu"
+because: "{palace} không có chính tinh"
+detail: "Đoạn mẫu."
+citations: []
+review: { level: L0, by: kb-draft, date: "2026-10-30", sources_checked: 0 }
+priority: 40

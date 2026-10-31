@@ -1,0 +1,22 @@
+{
+  "name": "@tinhban/profile-code",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@tinhban/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@tinhban/calendar": "workspace:*",
+    "@tinhban/chart-engine": "workspace:*",
+    "fast-check": "4.10.2",
+    "typescript": "6.0.3",
+    "vitest": "5.0.4"
+  }
+}

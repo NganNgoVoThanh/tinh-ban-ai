@@ -1,0 +1,21 @@
+{
+  "name": "@tinhban/narrative",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@tinhban/kb": "workspace:*",
+    "@tinhban/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@tinhban/chart-engine": "workspace:*",
+    "typescript": "6.0.3",
+    "vitest": "5.0.4"
+  }
+}

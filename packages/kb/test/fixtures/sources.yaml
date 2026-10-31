@@ -1,0 +1,5 @@
+sources:
+  - source_id: FIXTURE-A
+    title: Nguồn mẫu A (chỉ dùng cho test)
+  - source_id: FIXTURE-B
+    title: Nguồn mẫu B (chỉ dùng cho test)

@@ -1,0 +1,9 @@
+# Deploy lên Netlify (bản demo). Base directory để trống (gốc repo) để pnpm cài cả workspace;
+# Package directory là apps/web. Netlify tự gắn adapter Next.js (@netlify/plugin-nextjs).
+# Build trên máy chủ Netlify (nối repo Git): build trên Windows hỏng ở bước adapter tạo symlink (EPERM).
+[build]
+  command = "pnpm --filter @tinhban/web build"
+  publish = "apps/web/.next"
+
+[build.environment]
+  NODE_VERSION = "22"

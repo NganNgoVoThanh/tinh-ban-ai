@@ -1,0 +1,7 @@
+# Sách và tài liệu tham chiếu. Mỗi citation trong đơn vị tri thức phải có source_id ở đây.
+# Ví dụ:
+#   - source_id: TVDS-TB
+#     title: Tử Vi Đẩu Số Tân Biên
+#     author: Vân Đằng Thái Thứ Lang
+#     school: nam
+sources: []

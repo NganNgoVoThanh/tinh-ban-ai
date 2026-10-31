@@ -1,0 +1,73 @@
+/*
+ * Token màu của Tinh Bàn: nền lụa ngà, đỏ son làm màu nhấn chính, vàng kim là điểm sáng (ADR 0007,
+ * 0008; thay bảng chàm của Technical Plan mục 13). Tên biến theo quy ước của shadcn/ui để linh kiện
+ * dùng thẳng được; các màu riêng (vàng kim, dân gian, hợp/xung, Hóa Quyền, ngũ hành) thêm ở dưới.
+ * Màu chữ đã tính tương phản trên nền, bề mặt, nền phụ, ô cung đang chọn và tấm dát vàng (`gilded`),
+ * đều từ 4,5:1 (WCAG AA).
+ */
+:root {
+  --background: #f7f2e9; /* lụa ngà, sẫm hơn thẻ một chút để thẻ nổi như giấy dày */
+  --foreground: #241619; /* mực */
+  --card: #fffdf8;
+  --card-foreground: #241619;
+  --popover: #fffdf8;
+  --popover-foreground: #241619;
+  --primary: #a3171f; /* đỏ son */
+  --primary-foreground: #fff8f2;
+  --secondary: #f2eadf;
+  --secondary-foreground: #241619;
+  --muted: #f2eadf;
+  --muted-foreground: #6c5a5b;
+  --accent: #f2eadf; /* nền khi rê chuột của shadcn, không phải vàng kim */
+  --accent-foreground: #241619;
+  --destructive: #b42318; /* chỉ dùng cho nút xóa, luôn kèm chữ và hộp xác nhận */
+  --border: #e8dccb; /* viền ngả vàng */
+  --input: #d9c8b4;
+  --ring: #a3171f;
+  --radius: 0.875rem;
+
+  --gold: #835c12; /* vàng kim: viền Mệnh, Thân, năm hiện tại */
+  --folk: #7a4e1e;
+  --folk-bg: #f6ecdc;
+  --hop: #27734a;
+  --xung: #8a5600;
+  --quyen: #6a3fa0; /* Hóa Quyền: tím, để không lẫn với đỏ son và sao hành Hỏa */
+  --el-kim: #5e6573;
+  --el-moc: #27734a;
+  --el-thuy: #1e5aa0;
+  --el-hoa: #b3261e;
+  --el-tho: #7e5a15;
+}
+
+.dark {
+  --background: #1a1214; /* đêm ấm: đen pha nâu đỏ, không đen kịt */
+  --foreground: #f5ebe5;
+  --card: #241a1d;
+  --card-foreground: #f5ebe5;
+  --popover: #271c1f;
+  --popover-foreground: #f5ebe5;
+  --primary: #f4917f;
+  --primary-foreground: #1c0a0c;
+  --secondary: #33242a;
+  --secondary-foreground: #f5ebe5;
+  --muted: #33242a;
+  --muted-foreground: #c8b6b4;
+  --accent: #33242a;
+  --accent-foreground: #f5ebe5;
+  --destructive: #ff8f85;
+  --border: #44313a;
+  --input: #574049;
+  --ring: #f4917f;
+
+  --gold: #e6bf70;
+  --folk: #dbb468;
+  --folk-bg: #2b1f17;
+  --hop: #7fd39d;
+  --xung: #ecb552;
+  --quyen: #cbabf8;
+  --el-kim: #c3c8d3;
+  --el-moc: #7fd39d;
+  --el-thuy: #8cbaf3;
+  --el-hoa: #f4918a;
+  --el-tho: #dbb468;
+}

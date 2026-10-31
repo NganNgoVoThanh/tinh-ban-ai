@@ -1,0 +1,20 @@
+# Đơn vị mẫu cho test bộ biên dịch; nội dung không phải diễn giải đã duyệt.
+rule_id: TV.MENH.TU_VI.MIEU.001
+version: 1
+kind: interpretation
+topic: personality
+conditions:
+  all:
+    - { palace: menh, has_star: tu_vi }
+    - { star: tu_vi, state_in: [mieu, vuong] }
+headline: "Câu mẫu tầng 1 về {palace}"
+because: "{palace} có {star} {state}"
+detail: "Đoạn mẫu tầng 3."
+citations:
+  - { source_id: FIXTURE-A, page: 1 }
+review: { level: L1, by: test, date: "2026-10-30", sources_checked: 2 }
+priority: 60
+public: true
+tests:
+  positive: [golden/case-mau]
+  negative: [golden/case-khac]

@@ -1,0 +1,68 @@
+# CI (Technical Plan mục 19): typecheck, lint, quy tắc phụ thuộc, unit + golden test, kb build,
+# build app, quét bundle client, chặn eval, E2E + axe.
+name: CI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Kho tri thức (schema, test từng đơn vị, kiểm tra nội dung)
+        run: pnpm --filter @tinhban/kb build:kb
+      - name: Typecheck
+        run: |
+          pnpm --filter @tinhban/web exec next typegen
+          pnpm typecheck
+      - name: Lint
+        run: pnpm --filter @tinhban/web lint
+      - name: Quy tắc phụ thuộc
+        run: node tools/ci/check-deps.mjs
+      - name: Unit test, golden test cho cả hai phái, kiểm bất biến
+        run: pnpm test
+
+      - name: Build app
+        run: pnpm --filter @tinhban/web build
+      - name: Quét bundle client (khóa API, packages/ai)
+        run: node tools/ci/scan-bundle.mjs apps/web
+
+      - name: Chặn eval (sửa prompt, model hoặc kho)
+        if: github.event_name == 'pull_request'
+        run: node tools/ci/check-eval.mjs "origin/${{ github.base_ref }}" --labels "${{ join(github.event.pull_request.labels.*.name, ',') }}"
+
+      - name: Kiểm lỗ hổng phụ thuộc
+        run: pnpm audit --prod --audit-level high
+        continue-on-error: true
+
+      - name: E2E và axe (Android Chromium, iPhone WebKit)
+        run: |
+          pnpm --filter @tinhban/web exec playwright install --with-deps chromium webkit
+          pnpm --filter @tinhban/web e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright
+          path: apps/web/test-results/
+          retention-days: 7

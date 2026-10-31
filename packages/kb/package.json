@@ -1,0 +1,28 @@
+{
+  "name": "@tinhban/kb",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "build:kb": "node --experimental-strip-types --no-warnings build/cli.ts"
+  },
+  "dependencies": {
+    "@tinhban/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@tinhban/chart-engine": "workspace:*",
+    "@types/node": "22.20.5",
+    "typescript": "6.0.3",
+    "vitest": "5.0.4",
+    "yaml": "2.9.1",
+    "zod": "4.6.7"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./bundle.json": "./dist/kb.json"
+  }
+}

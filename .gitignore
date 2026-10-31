@@ -1,0 +1,14 @@
+node_modules/
+.next/
+dist/
+coverage/
+.env*
+!.env.example
+tools/golden/.venv/
+tools/golden/out/
+packages/kb/dist/
+tools/sample-charts/out/
+tools/eval/out/
+apps/web/test-results/
+apps/web/playwright-report/
+.netlify/
