@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: "Bắt đầu" };
 /** Chọn cửa vào (Technical Plan mục 12): chọn một lần, quyết định tab mở đầu và thứ tự khối. */
 export default function StartPage() {
   return (
-    <main className="mx-auto flex w-full max-w-140 flex-col gap-6 px-4 pb-8">
+    <main className="mx-auto flex w-full max-w-140 flex-col gap-6 px-4 pb-8 lg:max-w-4xl lg:px-8">
       <TopBar left={<BackTitle href="/" title="Bắt đầu" />} />
       <div className="flex flex-col items-center gap-3 pt-2 text-center animate-in fade-in slide-in-from-bottom-2 duration-500">
         <Emblem className="size-20 text-gold animate-float" spin />

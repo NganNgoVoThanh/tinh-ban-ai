@@ -156,7 +156,7 @@ export default function Landing() {
           </ul>
         </section>
 
-        <section aria-labelledby="goi-title" className="gilded overflow-hidden rounded-3xl p-6 sm:p-10">
+        <section aria-labelledby="goi-title" className="son overflow-hidden rounded-3xl p-6 sm:p-10">
           <Emblem className="pointer-events-none absolute -top-20 -right-20 size-72 text-gold opacity-15" spin core={false} />
           <div className="relative flex flex-col gap-4 sm:max-w-lg">
             <span className="text-xs font-semibold tracking-[0.2em] text-gold uppercase">Các gói</span>
@@ -172,7 +172,7 @@ export default function Landing() {
               ))}
             </ul>
             <p className="text-sm text-muted-foreground">Tinh Bàn Plus cho người muốn đọc sâu hơn đang được chuẩn bị.</p>
-            <Button asChild size="lg" className="w-fit rounded-full px-6">
+            <Button asChild size="lg" variant="gold" className="shine w-fit rounded-full px-6">
               <Link href="/goi">So sánh các gói</Link>
             </Button>
           </div>

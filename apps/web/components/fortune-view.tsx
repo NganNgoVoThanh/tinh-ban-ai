@@ -61,7 +61,8 @@ function SingleView({ profile, snapshot, currentYear, door }: { profile: LocalPr
 
   return (
     <div className="flex flex-col gap-4">
-      <ol aria-label="Đại vận" className="-mx-4 flex snap-x gap-2 overflow-x-auto px-4 pb-1">
+      {/* Điện thoại: một hàng kéo ngang. Máy tính: lưới thấy đủ 12 đại vận. */}
+      <ol aria-label="Đại vận" className="-mx-4 flex snap-x gap-2 overflow-x-auto px-4 pb-1 lg:mx-0 lg:grid lg:grid-cols-4 lg:overflow-visible lg:px-0 xl:grid-cols-6">
         {decades.map((p) => {
           const current = view.decade?.palaceKey === p.key;
           const decadeView = getYearView(snapshot, birth + p.decadal.from - 1, gender);
@@ -71,7 +72,7 @@ function SingleView({ profile, snapshot, currentYear, door }: { profile: LocalPr
                 type="button"
                 aria-current={current ? "true" : undefined}
                 onClick={() => setYear(birth + p.decadal.from - 1)}
-                className={`flex min-h-20 w-36 flex-col gap-0.5 rounded-2xl border bg-card p-2.5 text-left text-xs transition-all duration-300 hover:-translate-y-0.5 ${current ? "border-gold bg-[color-mix(in_oklab,var(--gold)_7%,var(--card))] shadow-[inset_0_0_0_1px_var(--gold),0_12px_24px_-16px_var(--gold)]" : "border-border"}`}
+                className={`flex min-h-20 w-36 flex-col gap-0.5 rounded-2xl border bg-card p-2.5 lg:size-full text-left text-xs transition-all duration-300 hover:-translate-y-0.5 ${current ? "border-gold bg-[color-mix(in_oklab,var(--gold)_7%,var(--card))] shadow-[inset_0_0_0_1px_var(--gold),0_12px_24px_-16px_var(--gold)]" : "border-border"}`}
               >
                 <span className="text-sm font-semibold tabular-nums">
                   {p.decadal.from}–{p.decadal.to} tuổi
@@ -97,74 +98,81 @@ function SingleView({ profile, snapshot, currentYear, door }: { profile: LocalPr
         })}
       </ol>
 
-      <ContentBlock
-        kind="fact"
-        title={
-          <span className="flex items-center gap-1">
-            <Button variant="ghost" size="icon" aria-label="Năm trước" disabled={year <= birth} onClick={() => setYear(year - 1)}>
-              <ChevronLeft aria-hidden />
-            </Button>
-            <span className="font-serif tabular-nums">
-              Năm {year} · {view.canChi} · {view.ageLunar} tuổi
-            </span>
-            <Button variant="ghost" size="icon" aria-label="Năm sau" onClick={() => setYear(year + 1)}>
-              <ChevronRight aria-hidden />
-            </Button>
-          </span>
-        }
-      >
-        <div className="flex flex-col gap-2 text-sm">
-          <p>
-            {view.smallLimitPalaceKey && <>Tiểu hạn: {palaceName(view.smallLimitPalaceKey)} · </>}
-            Lưu niên: {palaceName(view.yearPalaceKey)}
-            {view.decade && (
-              <>
-                {" "}
-                · Đại vận: {palaceName(view.decade.palaceKey)} ({view.decade.from}–{view.decade.to})
-              </>
-            )}
-          </p>
-          <p className="text-muted-foreground">Tứ hóa theo can năm {view.canChi.split(" ")[0]}:</p>
-          <MutagenRows hits={view.yearMutagens} />
-          <p className="text-muted-foreground">Kho chưa có nhận định đã duyệt về năm này.</p>
+      {/* Màn rộng từ 1280 px: năm đang xem bên trái, dòng thời gian của đại vận bên phải. */}
+      <div className="flex flex-col gap-4 xl:grid xl:grid-cols-2 xl:items-start xl:gap-6">
+        <div className="flex flex-col gap-4">
+          <ContentBlock
+            kind="fact"
+            title={
+              <span className="flex items-center gap-1">
+                <Button variant="ghost" size="icon" aria-label="Năm trước" disabled={year <= birth} onClick={() => setYear(year - 1)}>
+                  <ChevronLeft aria-hidden />
+                </Button>
+                <span className="font-serif tabular-nums">
+                  Năm {year} · {view.canChi} · {view.ageLunar} tuổi
+                </span>
+                <Button variant="ghost" size="icon" aria-label="Năm sau" onClick={() => setYear(year + 1)}>
+                  <ChevronRight aria-hidden />
+                </Button>
+              </span>
+            }
+          >
+            <div className="flex flex-col gap-2 text-sm">
+              <p>
+                {view.smallLimitPalaceKey && <>Tiểu hạn: {palaceName(view.smallLimitPalaceKey)} · </>}
+                Lưu niên: {palaceName(view.yearPalaceKey)}
+                {view.decade && (
+                  <>
+                    {" "}
+                    · Đại vận: {palaceName(view.decade.palaceKey)} ({view.decade.from}–{view.decade.to})
+                  </>
+                )}
+              </p>
+              <p className="text-muted-foreground">Tứ hóa theo can năm {view.canChi.split(" ")[0]}:</p>
+              <MutagenRows hits={view.yearMutagens} />
+              <p className="text-muted-foreground">Chưa có nhận định đã duyệt về năm này.</p>
+            </div>
+          </ContentBlock>
+          <Button variant="outline" className="w-fit" onClick={() => setCard(yearCardOf(snapshot, gender, year, window.location.origin, door, KB))}>
+            <Share2 aria-hidden /> Chia sẻ năm {year}
+          </Button>
         </div>
-      </ContentBlock>
-      <Button variant="outline" className="w-fit" onClick={() => setCard(yearCardOf(snapshot, gender, year, window.location.origin, door, KB))}>
-        <Share2 aria-hidden /> Chia sẻ năm {year}
-      </Button>
+        <section aria-label="Dòng thời gian của đại vận">
+          <h3 className="mb-1 text-sm font-medium text-muted-foreground">
+            Đại vận {selected?.from}–{selected?.to} tuổi
+          </h3>
+          {/* Danh sách hẹp hơn 512 px (điện thoại, nửa màn hình): Lộc, Kỵ xuống dòng dưới để tên cung không bị cắt. */}
+          <ol className="@container surface divide-y divide-border overflow-hidden rounded-2xl border">
+            {timeline.map((v) => {
+              const loc = hitIn(v, "loc");
+              const ky = hitIn(v, "ky");
+              return (
+                <li key={v.lunarYear}>
+                  <button
+                    type="button"
+                    aria-current={v.lunarYear === year ? "true" : undefined}
+                    onClick={() => setYear(v.lunarYear)}
+                    className={`grid min-h-11 w-full grid-cols-[3.5rem_5.5rem_2.5rem_1fr] items-center gap-x-2 gap-y-0.5 px-3 py-1.5 text-left text-sm tabular-nums @lg:grid-cols-[3.5rem_5.5rem_2.5rem_1fr_auto] ${v.lunarYear === year ? "bg-muted" : ""} ${v.lunarYear === currentYear ? "font-semibold text-gold" : ""}`}
+                  >
+                    <span>{v.lunarYear}</span>
+                    <span>{v.canChi}</span>
+                    <span>{v.ageLunar}t</span>
+                    <span className="truncate">{palaceName(v.yearPalaceKey)}</span>
+                    {(loc || ky) && (
+                      <span className="col-[2/-1] flex flex-wrap gap-x-2 text-xs @lg:col-auto">
+                        {loc && <span className="text-hop">● Lộc {palaceName(loc.palaceKey)}</span>}
+                        {ky && <span className="text-xung">◆ Kỵ {palaceName(ky.palaceKey)}</span>}
+                      </span>
+                    )}
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+          <p className="mt-1 text-xs text-muted-foreground">● Hóa Lộc, ◆ Hóa Kỵ của năm rơi vào Mệnh hoặc 5 cung hay hỏi.</p>
+        </section>
+      </div>
       {card && <ShareCardSheet card={card} open onOpenChange={(o) => !o && setCard(null)} />}
-
-      <section aria-label="Dòng thời gian của đại vận">
-        <h3 className="mb-1 text-sm font-medium text-muted-foreground">
-          Đại vận {selected?.from}–{selected?.to} tuổi
-        </h3>
-        <ol className="surface divide-y divide-border overflow-hidden rounded-2xl border">
-          {timeline.map((v) => {
-            const loc = hitIn(v, "loc");
-            const ky = hitIn(v, "ky");
-            return (
-              <li key={v.lunarYear}>
-                <button
-                  type="button"
-                  aria-current={v.lunarYear === year ? "true" : undefined}
-                  onClick={() => setYear(v.lunarYear)}
-                  className={`grid min-h-11 w-full grid-cols-[3.5rem_5.5rem_2.5rem_1fr_auto] items-center gap-2 px-3 text-left text-sm tabular-nums ${v.lunarYear === year ? "bg-muted" : ""} ${v.lunarYear === currentYear ? "font-semibold text-gold" : ""}`}
-                >
-                  <span>{v.lunarYear}</span>
-                  <span>{v.canChi}</span>
-                  <span>{v.ageLunar}t</span>
-                  <span className="truncate">{palaceName(v.yearPalaceKey)}</span>
-                  <span className="flex gap-1 text-xs">
-                    {loc && <span className="text-hop">● Lộc {palaceName(loc.palaceKey)}</span>}
-                    {ky && <span className="text-xung">◆ Kỵ {palaceName(ky.palaceKey)}</span>}
-                  </span>
-                </button>
-              </li>
-            );
-          })}
-        </ol>
-        <p className="mt-1 text-xs text-muted-foreground">● Hóa Lộc, ◆ Hóa Kỵ của năm rơi vào Mệnh hoặc 5 cung hay hỏi.</p>
-      </section>
     </div>
   );
 }
@@ -173,7 +181,7 @@ function SingleView({ profile, snapshot, currentYear, door }: { profile: LocalPr
 function FamilyView({ profiles, currentYear, defaultSchool, onOpen }: { profiles: LocalProfile[]; currentYear: number; defaultSchool: string; onOpen: (p: LocalProfile) => void }) {
   const yearBranch = yearCanChi(currentYear).chi;
   return (
-    <ul className="grid grid-cols-1 gap-3 md:grid-cols-2">
+    <ul className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
       {profiles.map((p, i) => {
         const s = chartOf(p).snapshot;
         if (!s) return null;
@@ -236,15 +244,17 @@ export function FortuneView({
   };
   return (
     <div className="flex flex-col gap-3">
-      <Segmented<"single" | "family">
-        label="Xem vận hạn của"
-        value={mode}
-        onChange={change}
-        options={[
-          { value: "single", label: "Một người" },
-          { value: "family", label: "Cả nhà" },
-        ]}
-      />
+      <div className="lg:max-w-md">
+        <Segmented<"single" | "family">
+          label="Xem vận hạn của"
+          value={mode}
+          onChange={change}
+          options={[
+            { value: "single", label: "Một người" },
+            { value: "family", label: "Cả nhà" },
+          ]}
+        />
+      </div>
       {mode === "single" ? (
         <SingleView key={profile.profileId} profile={profile} snapshot={snapshot} currentYear={currentYear} door={door} />
       ) : (

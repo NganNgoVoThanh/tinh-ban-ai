@@ -73,7 +73,7 @@ export async function askQuestion(opts: {
     }
   }
   if (opts.under16) {
-    return { kind: "refusal", message: "Hồ sơ dưới 16 tuổi: câu hỏi chỉ được trả lời bằng kho trên máy, và kho chưa có căn cứ cho câu này." };
+    return { kind: "refusal", message: "Hồ sơ dưới 16 tuổi: câu hỏi chỉ được trả lời ngay trên máy bằng tri thức Tử Vi đã duyệt, và hiện chưa có căn cứ cho câu này." };
   }
   if (!navigator.onLine) return { kind: "offline" };
 

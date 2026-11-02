@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { Emblem } from "@/components/emblem";
 import { ProfileCodeCard } from "@/components/profile-code-card";
 import { Button } from "@/components/ui/button";
-import { Drawer, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
+import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/sheet";
 import { isIos, promptInstall, requestPersistentStorage, useCanInstall } from "@/lib/install";
 import { isStandalone } from "@/lib/meta";
 import { useHydrated } from "@/lib/use-hydrated";
@@ -43,23 +43,23 @@ export function KeepSafeSheet({ profile, open, onOpenChange }: { profile: LocalP
     if (open) void requestPersistentStorage();
   }, [open]);
   return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="max-h-[92dvh]">
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent>
         <div className="mx-auto flex w-full max-w-md flex-col gap-4 overflow-y-auto px-4">
-          <DrawerHeader className="items-center px-0">
+          <SheetHeader className="items-center px-0">
             <Emblem className="mb-1 size-12 text-gold" />
-            <DrawerTitle className="font-display text-2xl font-semibold">Giữ lá số an toàn</DrawerTitle>
-            <DrawerDescription>Hồ sơ chỉ nằm trên máy này. Lưu mã hồ sơ để khôi phục khi đổi máy hoặc trình duyệt xóa dữ liệu.</DrawerDescription>
-          </DrawerHeader>
+            <SheetTitle className="font-display text-2xl font-semibold">Giữ lá số an toàn</SheetTitle>
+            <SheetDescription>Hồ sơ chỉ nằm trên máy này. Lưu mã hồ sơ để khôi phục khi đổi máy hoặc trình duyệt xóa dữ liệu.</SheetDescription>
+          </SheetHeader>
           <ProfileCodeCard profile={profile} />
           <InstallGuide />
         </div>
-        <DrawerFooter className="mx-auto w-full max-w-md">
+        <SheetFooter className="mx-auto w-full max-w-md">
           <Button size="lg" className="rounded-full" onClick={() => onOpenChange(false)}>
             Đã lưu, xem lá số
           </Button>
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   );
 }

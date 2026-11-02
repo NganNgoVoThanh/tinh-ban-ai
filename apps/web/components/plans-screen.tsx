@@ -72,7 +72,7 @@ function PlanCard({ plan, billing, onInterest }: { plan: Plan; billing: Billing;
   return (
     <li
       className={`relative flex flex-col gap-4 overflow-hidden rounded-3xl border p-5 ${
-        featured ? "gilded border-transparent md:-my-3 md:py-8" : "surface"
+        featured ? "son border-transparent md:-my-3 md:py-8" : "surface"
       }`}
     >
       {featured && <Emblem className="pointer-events-none absolute -top-14 -right-14 size-48 text-gold opacity-15" spin core={false} />}
@@ -108,7 +108,7 @@ function PlanCard({ plan, billing, onInterest }: { plan: Plan; billing: Billing;
       ) : (
         <Button
           size="lg"
-          variant={featured ? "default" : "outline"}
+          variant={featured ? "gold" : "outline"}
           className={`relative rounded-full ${featured ? "shine" : ""}`}
           onClick={() => onInterest(products)}
         >
@@ -154,10 +154,10 @@ export function PlansScreen() {
   };
 
   return (
-    <main className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 pb-12">
+    <main className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 pb-12 lg:px-8">
       <TopBar left={<BackTitle href="/ho-so" title="Các gói" />} />
 
-      <section aria-label="Gói của bạn" className="gilded flex items-center gap-4 overflow-hidden rounded-3xl p-5 animate-in fade-in zoom-in-95 duration-500 sm:p-7">
+      <section aria-label="Gói của bạn" className="son flex items-center gap-4 overflow-hidden rounded-3xl p-5 animate-in fade-in zoom-in-95 duration-500 sm:p-7">
         <Emblem className="size-16 shrink-0 text-gold sm:size-20" spin />
         <div className="flex flex-col gap-1">
           <span className="text-xs font-semibold tracking-[0.2em] text-gold uppercase">Gói của bạn</span>

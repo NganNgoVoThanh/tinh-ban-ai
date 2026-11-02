@@ -40,10 +40,10 @@ function StdTimeLine({ form, analysis, onOverride }: { form: BirthForm; analysis
   const withDate = analysis.solarDate !== undefined && stdDate !== analysis.solarDate;
   const why =
     form.timeMode === "canh"
-      ? "Nhập theo giờ âm nên không quy đổi múi giờ: bộ tính dùng thẳng giờ âm đã chọn."
+      ? "Nhập theo giờ âm nên không quy đổi múi giờ: Tinh Bàn dùng thẳng giờ âm đã chọn."
       : form.place?.kind === "abroad"
-        ? `Giờ đồng hồ nơi sinh lúc đó là ${utcLabel(std.clockOffsetMin)}. Bộ tính dùng giờ chuẩn nơi sinh ${utcLabel(std.stdOffsetMin)}, đã bỏ giờ mùa hè nếu có.`
-        : `Giờ đồng hồ nơi sinh lúc đó là ${utcLabel(std.clockOffsetMin)}. Bộ tính đổi sang giờ chuẩn ${utcLabel(std.stdOffsetMin)} để an sao.`;
+        ? `Giờ đồng hồ nơi sinh lúc đó là ${utcLabel(std.clockOffsetMin)}. Tinh Bàn dùng giờ chuẩn nơi sinh ${utcLabel(std.stdOffsetMin)}, đã bỏ giờ mùa hè nếu có.`
+        : `Giờ đồng hồ nơi sinh lúc đó là ${utcLabel(std.clockOffsetMin)}. Tinh Bàn đổi sang giờ chuẩn ${utcLabel(std.stdOffsetMin)} để an sao.`;
 
   return (
     <div className="surface flex flex-col gap-2 rounded-2xl border p-3 text-sm">

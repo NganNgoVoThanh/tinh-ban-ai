@@ -4,7 +4,10 @@ import { cn } from "cn";
 import { ToggleGroup } from "radix-ui";
 import type { ReactNode } from "react";
 
-/** Nút chọn một trong vài lựa chọn, cao 44 px; mục đang chọn là viên nền sáng viền chỉ vàng, chữ đỏ son đậm, bóng rất nhẹ. */
+/**
+ * Nút chọn một trong vài lựa chọn, cao 44 px: các ô rời nhau nền ngà viền mảnh, ô đang chọn là lá vàng
+ * (`gold-leaf`), chữ nâu đậm. Không dùng rãnh nền với viên nổi, không gạch dưới (ADR 0009).
+ */
 export function Segmented<T extends string>({
   value,
   onChange,
@@ -31,13 +34,16 @@ export function Segmented<T extends string>({
       aria-label={label}
       aria-invalid={invalid || undefined}
       disabled={disabled}
-      className={cn("grid w-full auto-cols-fr grid-flow-col gap-1 rounded-xl border border-border bg-muted p-1", invalid && "ring-2 ring-xung")}
+      className="grid w-full auto-cols-fr grid-flow-col gap-2"
     >
       {options.map((o) => (
         <ToggleGroup.Item
           key={o.value}
           value={o.value}
-          className="h-11 rounded-lg px-2 text-sm font-medium text-muted-foreground outline-none transition-all duration-200 focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 data-[state=on]:bg-card data-[state=on]:font-semibold data-[state=on]:text-primary data-[state=on]:shadow-[0_0_0_1px_color-mix(in_oklab,var(--gold)_40%,transparent),0_2px_8px_-4px_rgb(90_60_20/0.25)]"
+          className={cn(
+            "min-h-11 rounded-xl border bg-card px-2 py-1 text-sm leading-tight font-medium text-muted-foreground outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 disabled:opacity-50 data-[state=off]:hover:border-[color-mix(in_oklab,var(--gold)_45%,var(--input))] data-[state=off]:hover:text-foreground data-[state=on]:gold-leaf data-[state=on]:font-semibold",
+            invalid ? "border-xung" : "border-input",
+          )}
         >
           {o.label}
         </ToggleGroup.Item>

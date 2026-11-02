@@ -18,10 +18,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { profileLabel } from "@/lib/profiles";
 
-/** Thanh trên: trái là chọn hồ sơ (hoặc nút quay lại và tiêu đề), phải là chip phái và menu. */
+/**
+ * Thanh trên: trái là chọn hồ sơ (hoặc nút quay lại và tiêu đề), phải là chip phái và menu. Tràn ra
+ * mép vùng đệm của <main> (px-4, máy tính lg:px-8); nền và đường kẻ dưới tràn tiếp tới hai mép màn
+ * hình (`bleed-bar`).
+ */
 export function TopBar({ left, right }: { left: ReactNode; right?: ReactNode }) {
   return (
-    <header className="sticky top-0 z-20 -mx-4 flex min-h-14 items-center justify-between gap-2 border-b border-border/70 bg-background/80 px-2 backdrop-blur-xl backdrop-saturate-150">
+    <header className="bleed-bar sticky top-0 z-20 -mx-4 flex min-h-14 items-center justify-between gap-2 border-b border-transparent px-2 backdrop-blur-md backdrop-saturate-150 lg:-mx-8 lg:px-6">
       <div className="flex min-w-0 items-center">{left}</div>
       <div className="flex items-center gap-1">{right}</div>
     </header>

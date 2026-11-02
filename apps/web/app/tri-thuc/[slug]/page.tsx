@@ -52,7 +52,7 @@ export default async function KnowledgePage({ params }: PageProps<"/tri-thuc/[sl
   };
 
   return (
-    <main className="mx-auto flex w-full max-w-140 flex-col gap-5 px-4 pt-4 pb-12">
+    <main className="mx-auto flex w-full max-w-140 flex-col gap-5 px-4 pt-4 pb-12 lg:max-w-3xl lg:px-8">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <nav aria-label="Đường dẫn" className="text-sm">
         <Link href="/tri-thuc" className="flex min-h-11 items-center text-primary">

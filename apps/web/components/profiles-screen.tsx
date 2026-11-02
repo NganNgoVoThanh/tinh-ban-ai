@@ -217,7 +217,7 @@ function PlanCard() {
   return (
     <Link
       href="/goi"
-      className="gilded group flex items-center gap-4 overflow-hidden rounded-3xl p-4 outline-none transition-transform duration-300 hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring"
+      className="son group flex items-center gap-4 overflow-hidden rounded-3xl p-4 outline-none transition-transform duration-300 hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
     >
       <Emblem className="size-12 text-gold" spin />
       <span className="flex flex-1 flex-col">
@@ -227,7 +227,7 @@ function PlanCard() {
           {quota ? `Còn ${quota.remaining}/${quota.total} câu hỏi tự do hôm nay` : `${FREE_DAILY_QUESTIONS} câu hỏi tự do mỗi ngày`}
         </span>
       </span>
-      <span className="flex items-center gap-1 rounded-full border border-gold/50 px-3 py-1.5 text-sm font-medium text-gold transition-colors group-hover:bg-gold/10">
+      <span className="gold-leaf flex items-center gap-1 rounded-full border px-3 py-1.5 text-sm font-semibold transition-[filter] group-hover:brightness-105">
         <Crown className="size-4" aria-hidden /> Các gói
       </span>
     </Link>
@@ -252,94 +252,99 @@ export function ProfilesScreen() {
   };
 
   return (
-    <main className="mx-auto flex w-full max-w-140 flex-col gap-6 px-4 pb-8">
+    <main className="mx-auto flex w-full max-w-140 flex-col gap-6 px-4 pb-8 md:max-w-3xl lg:max-w-448 lg:px-8">
       <TopBar left={<h1 className="px-2 font-serif text-xl font-semibold">Hồ sơ</h1>} />
-      <PlanCard />
+      {/* Máy tính: trái là gói và cả nhà (đứng yên khi cuộn), phải là Cài đặt. */}
+      <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:items-start lg:gap-8">
+        <div className="flex flex-col gap-6 lg:sticky lg:top-18">
+          <PlanCard />
 
-      <section className="flex flex-col gap-2">
-        <h2 className="font-serif text-lg font-semibold">Cả nhà</h2>
-        <ul className="surface divide-y divide-border overflow-hidden rounded-2xl border">
-          {profiles?.map((p, i) => (
-            <li key={p.profileId}>
-              <Link href={chartHref(p.profileId)} className="flex min-h-16 items-center gap-3 px-3 transition-colors hover:bg-muted">
-                <span aria-hidden className={`flex size-10 shrink-0 items-center justify-center rounded-full font-serif text-lg font-semibold text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.25)] ${AVATAR[i % AVATAR.length]}`}>
-                  {profileLabel(p, i).charAt(0).toUpperCase()}
-                </span>
-                <span className="flex flex-1 flex-col">
-                  <span className="font-medium">{profileLabel(p, i)}</span>
-                  <span className="text-sm text-muted-foreground tabular-nums">
-                    {p.birth.calendar === "solar" ? formatSolar(p.birth.date) : `${formatSolar(p.birth.date)} âm lịch`} · {SCHOOL_NAMES[p.schoolId]}
-                  </span>
-                </span>
-                <ChevronRight className="text-muted-foreground" aria-hidden />
-              </Link>
-            </li>
-          ))}
-          <li>
-            <Link href="/ho-so/moi" className="flex min-h-14 items-center gap-2 px-3 font-medium text-primary transition-colors hover:bg-muted">
-              <Plus aria-hidden /> Thêm hồ sơ
-            </Link>
-          </li>
-          <li>
-            <Link href="/khoi-phuc" className="flex min-h-14 items-center gap-2 px-3 font-medium text-primary transition-colors hover:bg-muted">
-              <Upload aria-hidden /> Khôi phục bằng mã hoặc file
-            </Link>
-          </li>
-        </ul>
-      </section>
-
-      <section className="flex flex-col gap-2">
-        <h2 className="font-serif text-lg font-semibold">Cài đặt</h2>
-        <div className="surface divide-y divide-border rounded-2xl border">
-          <SettingRow label="Giao diện">
-            <Segmented<Settings["theme"]>
-              label="Giao diện"
-              value={settings?.theme ?? null}
-              onChange={setThemeSetting}
-              options={[
-                { value: "system", label: "Theo máy" },
-                { value: "light", label: "Sáng" },
-                { value: "dark", label: "Tối" },
-              ]}
-            />
-          </SettingRow>
-          <SettingRow label="Phái mặc định cho hồ sơ mới">
-            <Segmented<SchoolId>
-              label="Phái mặc định"
-              value={settings?.defaultSchool ?? null}
-              onChange={setDefaultSchool}
-              options={[
-                { value: "nam", label: SCHOOL_NAMES.nam },
-                { value: "bac", label: SCHOOL_NAMES.bac },
-              ]}
-            />
-          </SettingRow>
-          <ReminderSettings />
-          <PushSettings enabled={settings?.reminders.push ?? false} />
-          <SettingRow label="Bản trả phí">
-            <Button asChild variant="outline" className="justify-start">
-              <Link href="/goi">
-                <Crown className="text-gold" aria-hidden /> Xem các gói
-              </Link>
-            </Button>
-          </SettingRow>
-          <DataSettings />
-          <SettingRow label="Gửi số liệu dùng app ẩn danh">
-            <Segmented<"on" | "off">
-              label="Phân tích ẩn danh"
-              value={settings?.analyticsConsent === true ? "on" : settings?.analyticsConsent === false ? "off" : null}
-              onChange={(v) => void updateSettings({ analyticsConsent: v === "on" })}
-              options={[
-                { value: "on", label: "Bật" },
-                { value: "off", label: "Tắt" },
-              ]}
-            />
-          </SettingRow>
+          <section className="flex flex-col gap-2">
+            <h2 className="font-serif text-lg font-semibold">Cả nhà</h2>
+            <ul className="surface divide-y divide-border overflow-hidden rounded-2xl border">
+              {profiles?.map((p, i) => (
+                <li key={p.profileId}>
+                  <Link href={chartHref(p.profileId)} className="flex min-h-16 items-center gap-3 px-3 transition-colors hover:bg-muted">
+                    <span aria-hidden className={`flex size-10 shrink-0 items-center justify-center rounded-full font-serif text-lg font-semibold text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.25)] ${AVATAR[i % AVATAR.length]}`}>
+                      {profileLabel(p, i).charAt(0).toUpperCase()}
+                    </span>
+                    <span className="flex flex-1 flex-col">
+                      <span className="font-medium">{profileLabel(p, i)}</span>
+                      <span className="text-sm text-muted-foreground tabular-nums">
+                        {p.birth.calendar === "solar" ? formatSolar(p.birth.date) : `${formatSolar(p.birth.date)} âm lịch`} · {SCHOOL_NAMES[p.schoolId]}
+                      </span>
+                    </span>
+                    <ChevronRight className="text-muted-foreground" aria-hidden />
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link href="/ho-so/moi" className="flex min-h-14 items-center gap-2 px-3 font-medium text-primary transition-colors hover:bg-muted">
+                  <Plus aria-hidden /> Thêm hồ sơ
+                </Link>
+              </li>
+              <li>
+                <Link href="/khoi-phuc" className="flex min-h-14 items-center gap-2 px-3 font-medium text-primary transition-colors hover:bg-muted">
+                  <Upload aria-hidden /> Khôi phục bằng mã hoặc file
+                </Link>
+              </li>
+            </ul>
+          </section>
         </div>
-        <Link href="/quyen-rieng-tu" className="flex min-h-11 items-center text-sm text-primary">
-          Quyền riêng tư: dữ liệu nào đi đâu
-        </Link>
-      </section>
+
+        <section className="flex flex-col gap-2">
+          <h2 className="font-serif text-lg font-semibold">Cài đặt</h2>
+          <div className="surface divide-y divide-border rounded-2xl border">
+            <SettingRow label="Giao diện">
+              <Segmented<Settings["theme"]>
+                label="Giao diện"
+                value={settings?.theme ?? null}
+                onChange={setThemeSetting}
+                options={[
+                  { value: "system", label: "Theo máy" },
+                  { value: "light", label: "Sáng" },
+                  { value: "dark", label: "Tối" },
+                ]}
+              />
+            </SettingRow>
+            <SettingRow label="Phái mặc định cho hồ sơ mới">
+              <Segmented<SchoolId>
+                label="Phái mặc định"
+                value={settings?.defaultSchool ?? null}
+                onChange={setDefaultSchool}
+                options={[
+                  { value: "nam", label: SCHOOL_NAMES.nam },
+                  { value: "bac", label: SCHOOL_NAMES.bac },
+                ]}
+              />
+            </SettingRow>
+            <ReminderSettings />
+            <PushSettings enabled={settings?.reminders.push ?? false} />
+            <SettingRow label="Bản trả phí">
+              <Button asChild variant="outline" className="justify-start">
+                <Link href="/goi">
+                  <Crown className="text-gold" aria-hidden /> Xem các gói
+                </Link>
+              </Button>
+            </SettingRow>
+            <DataSettings />
+            <SettingRow label="Gửi số liệu dùng app ẩn danh">
+              <Segmented<"on" | "off">
+                label="Phân tích ẩn danh"
+                value={settings?.analyticsConsent === true ? "on" : settings?.analyticsConsent === false ? "off" : null}
+                onChange={(v) => void updateSettings({ analyticsConsent: v === "on" })}
+                options={[
+                  { value: "on", label: "Bật" },
+                  { value: "off", label: "Tắt" },
+                ]}
+              />
+            </SettingRow>
+          </div>
+          <Link href="/quyen-rieng-tu" className="flex min-h-11 items-center text-sm text-primary">
+            Quyền riêng tư: dữ liệu nào đi đâu
+          </Link>
+        </section>
+      </div>
     </main>
   );
 }

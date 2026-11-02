@@ -100,52 +100,56 @@ export function RestoreScreen() {
   };
 
   return (
-    <main className="mx-auto flex w-full max-w-140 flex-col gap-6 px-4 pb-8">
+    <main className="mx-auto flex w-full max-w-140 flex-col gap-6 px-4 pb-8 lg:max-w-5xl lg:px-8">
       <TopBar left={<BackTitle href="/" title="Khôi phục" />} />
       <p className="flex items-center gap-3 text-sm text-muted-foreground">
         <Emblem className="size-10 text-gold" />
         Nhập mã hồ sơ (bắt đầu bằng TB2) hoặc quét mã QR đã lưu để dựng lại lá số trên máy này.
       </p>
 
-      <section className="flex flex-col gap-3">
-        <Field id="code" label="Mã hồ sơ" error={result.error}>
-          <Input
-            id="code"
-            value={code}
-            onChange={(e) => setEntry({ code: formatCode(e.target.value), via: "code" })}
-            placeholder="TB2-XXXX-XXXX-XXXX-XX"
-            autoComplete="off"
-            autoCapitalize="characters"
-            spellCheck={false}
-            aria-invalid={result.error ? true : undefined}
-            aria-describedby={result.error ? "code-error" : undefined}
-            className="font-mono tracking-wider"
-          />
-        </Field>
-        <Button variant="outline" onClick={() => setScanning(true)}>
-          <QrCode aria-hidden /> Quét mã QR
-        </Button>
-        {result.profile && (
-          <div className="surface flex flex-col gap-3 rounded-2xl border border-gold/50 p-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
-            <p className="text-sm">{describe(result.profile)}</p>
-            <Field id="restore-name" label="Tên (không có trong mã, đặt lại nếu muốn)">
-              <Input id="restore-name" value={name} onChange={(e) => setName(e.target.value)} maxLength={40} autoComplete="off" />
-            </Field>
-            <Button size="lg" className="rounded-full" onClick={() => void restore()}>
-              Khôi phục lá số
-            </Button>
-          </div>
-        )}
-      </section>
+      {/* Máy tính: hai cách khôi phục là hai thẻ cạnh nhau. */}
+      <div className="flex flex-col gap-6 lg:grid lg:grid-cols-2 lg:items-start lg:gap-8">
+        <section className="flex flex-col gap-3 lg:surface lg:rounded-3xl lg:border lg:p-6">
+          <h2 className="hidden font-serif text-lg font-semibold lg:block">Từ mã hồ sơ</h2>
+          <Field id="code" label="Mã hồ sơ" error={result.error}>
+            <Input
+              id="code"
+              value={code}
+              onChange={(e) => setEntry({ code: formatCode(e.target.value), via: "code" })}
+              placeholder="TB2-XXXX-XXXX-XXXX-XX"
+              autoComplete="off"
+              autoCapitalize="characters"
+              spellCheck={false}
+              aria-invalid={result.error ? true : undefined}
+              aria-describedby={result.error ? "code-error" : undefined}
+              className="font-mono tracking-wider"
+            />
+          </Field>
+          <Button variant="outline" onClick={() => setScanning(true)}>
+            <QrCode aria-hidden /> Quét mã QR
+          </Button>
+          {result.profile && (
+            <div className="surface flex flex-col gap-3 rounded-2xl border border-gold/50 p-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+              <p className="text-sm">{describe(result.profile)}</p>
+              <Field id="restore-name" label="Tên (không có trong mã, đặt lại nếu muốn)">
+                <Input id="restore-name" value={name} onChange={(e) => setName(e.target.value)} maxLength={40} autoComplete="off" />
+              </Field>
+              <Button size="lg" className="rounded-full" onClick={() => void restore()}>
+                Khôi phục lá số
+              </Button>
+            </div>
+          )}
+        </section>
 
-      <section className="flex flex-col gap-2">
-        <h2 className="font-serif text-lg font-semibold">Từ file sao lưu</h2>
-        <Button variant="outline" onClick={() => fileInput.current?.click()}>
-          <Upload aria-hidden /> Nhập file sao lưu
-        </Button>
-        <input ref={fileInput} type="file" accept="application/json,.json" className="sr-only" aria-label="Chọn file sao lưu" onChange={(e) => void onFile(e.target.files?.[0])} />
-        <p className="text-sm text-muted-foreground">Mã hồ sơ khôi phục một hồ sơ; file sao lưu khôi phục cả nhà cùng lịch sử hỏi đáp.</p>
-      </section>
+        <section className="flex flex-col gap-2 lg:surface lg:gap-3 lg:rounded-3xl lg:border lg:p-6">
+          <h2 className="font-serif text-lg font-semibold">Từ file sao lưu</h2>
+          <Button variant="outline" onClick={() => fileInput.current?.click()}>
+            <Upload aria-hidden /> Nhập file sao lưu
+          </Button>
+          <input ref={fileInput} type="file" accept="application/json,.json" className="sr-only" aria-label="Chọn file sao lưu" onChange={(e) => void onFile(e.target.files?.[0])} />
+          <p className="text-sm text-muted-foreground">Mã hồ sơ khôi phục một hồ sơ; file sao lưu khôi phục cả nhà cùng lịch sử hỏi đáp.</p>
+        </section>
+      </div>
 
       <Dialog open={scanning} onOpenChange={setScanning}>
         <DialogContent>

@@ -151,7 +151,7 @@ export function ChartGrid(props: ChartGridProps) {
   const byKey = new Map(palaces.map((p) => [p.key, p]));
 
   return (
-    <div ref={container} className={`relative grid grid-cols-4 gap-px overflow-hidden ${FRAME}`}>
+    <div ref={container} className={`@container relative grid grid-cols-4 gap-px overflow-hidden ${FRAME}`}>
       {palaces.map((p) => {
         const [row, col] = GRID_POSITION[p.branch]!;
         const isStrong = strong.includes(p.key);
@@ -171,7 +171,9 @@ export function ChartGrid(props: ChartGridProps) {
             onClick={() => onSelect(selected === p.key ? null : p.key)}
             style={{ gridRow: row + 1, gridColumn: col + 1 }}
             className={[
-              'relative flex min-h-28 flex-col gap-0.5 bg-card p-1 text-left text-[11px] leading-tight transition-opacity duration-150 outline-none focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none',
+              // Lưới rộng từ 672 px (bản web trên máy tính): ô cao hơn, chữ to hơn một bậc cho dễ đọc; từ
+              // 896 px (màn rất rộng) thêm một bậc nữa để lưới không dẹt.
+              'relative flex min-h-28 flex-col gap-0.5 bg-card p-1 text-left text-[11px] leading-tight transition-opacity duration-150 outline-none focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none @2xl:min-h-36 @2xl:p-1.5 @2xl:text-xs @4xl:min-h-44 @4xl:gap-1 @4xl:p-2 @4xl:text-sm',
               marked ? 'shadow-[inset_0_0_0_2px_var(--gold)]' : '',
               // Trộn đỏ son vào bề mặt (không dùng nền trong suốt, kẻo lộ màu viền của lưới). 11% để chữ
               // vàng, hợp, xung trên nền này vẫn đạt 4,5:1.
@@ -180,11 +182,11 @@ export function ChartGrid(props: ChartGridProps) {
               focused && !isStrong && !isSoft ? '[&>*]:opacity-50' : '',
             ].join(' ')}
           >
-            <span className="flex flex-wrap items-center gap-x-1 text-xs font-semibold">
+            <span className="flex flex-wrap items-center gap-x-1 text-xs font-semibold @2xl:text-sm @4xl:text-base">
               {labels.palaceName(p.key, p.name)}
               {p.isBody && <span className="rounded-sm bg-gold px-0.5 text-[10px] font-medium text-card">Thân</span>}
             </span>
-            <span className="text-xs font-medium">
+            <span className="text-xs font-medium @2xl:text-sm @4xl:text-base">
               {p.majorStars.length ? (
                 p.majorStars.map((s) => <StarLine key={s.key} star={s} labels={labels} />)
               ) : (

@@ -3,7 +3,7 @@
 import { Download, Share2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Drawer, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
+import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/sheet";
 import { trackEvent } from "@/lib/analytics";
 import { CARD_HEIGHT, CARD_WIDTH, svgToPng, yearCardSvg, type YearCard } from "@/lib/share-card";
 
@@ -46,13 +46,13 @@ export function ShareCardSheet({ card, open, onOpenChange }: { card: YearCard; o
   };
 
   return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="max-h-[92dvh]">
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent>
         <div className="mx-auto flex w-full max-w-md flex-col gap-3 overflow-y-auto px-4">
-          <DrawerHeader className="px-0">
-            <DrawerTitle className="font-display text-2xl font-semibold">Chia sẻ năm {card.lunarYear}</DrawerTitle>
-            <DrawerDescription>Thẻ không có ngày giờ sinh, tuổi, tên hay mã hồ sơ.</DrawerDescription>
-          </DrawerHeader>
+          <SheetHeader className="px-0">
+            <SheetTitle className="font-display text-2xl font-semibold">Chia sẻ năm {card.lunarYear}</SheetTitle>
+            <SheetDescription>Thẻ không có ngày giờ sinh, tuổi, tên hay mã hồ sơ.</SheetDescription>
+          </SheetHeader>
           {/* eslint-disable-next-line @next/next/no-img-element -- ảnh SVG tạo trên máy, không qua next/image */}
           <img
             data-testid="share-card"
@@ -68,13 +68,13 @@ export function ShareCardSheet({ card, open, onOpenChange }: { card: YearCard; o
             </p>
           )}
         </div>
-        <DrawerFooter className="mx-auto w-full max-w-md">
+        <SheetFooter className="mx-auto w-full max-w-md">
           <Button size="lg" disabled={busy} onClick={() => void share()}>
             {typeof navigator !== "undefined" && "share" in navigator ? <Share2 aria-hidden /> : <Download aria-hidden />}
             Chia sẻ ảnh
           </Button>
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   );
 }

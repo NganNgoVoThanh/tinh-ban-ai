@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 /** Danh mục trang tri thức công khai (Technical Plan mục 14), sinh tĩnh. */
 export default function KnowledgeIndex() {
   return (
-    <main className="mx-auto flex w-full max-w-140 flex-col gap-5 px-4 pt-4 pb-12">
+    <main className="mx-auto flex w-full max-w-140 flex-col gap-5 px-4 pt-4 pb-12 lg:max-w-4xl lg:px-8">
       <nav aria-label="Đường dẫn" className="text-sm">
         <Link href="/" className="flex min-h-11 items-center text-primary">
           ‹ Tinh Bàn

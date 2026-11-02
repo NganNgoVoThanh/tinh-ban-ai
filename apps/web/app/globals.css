@@ -186,6 +186,84 @@
 }
 
 /*
+ * Tấm đỏ son (ADR 0007, dùng lại ở ADR 0009): đỏ son tươi chuyển sang đỏ rượu (cùng dải với thẻ chia
+ * sẻ), ánh vàng ≤ 7% ở góc trên, khung chỉ vàng đôi, kim nhũ vàng lấp lánh. Tự mang token chữ (ngà,
+ * hồng nhạt, vàng nhạt) nên text-foreground, text-muted-foreground, text-gold bên trong tự đổi màu;
+ * nút trên tấm dùng biến thể `gold`. Chữ từ 4,8:1 trên mọi nấc của dải, kể cả chỗ ánh vàng. Giống
+ * nhau ở chế độ sáng và tối. Chỉ cho khối giới thiệu gói và thẻ gói; khung trong giả định rounded-3xl.
+ */
+@utility son {
+  --foreground: #fffaf3;
+  --card-foreground: #fffaf3;
+  --muted-foreground: #fbe1d6;
+  --gold: #ffe3a3;
+  --primary: #ffe3a3;
+  --hop: #c4f2d2;
+  --border: rgb(255 227 163 / 0.3);
+  --ring: #ffe3a3;
+  --fleck: rgb(255 227 163 / 0.8);
+  position: relative;
+  isolation: isolate;
+  color: var(--foreground);
+  background-color: #a01d29;
+  background-image:
+    radial-gradient(90% 120% at 100% 0%, rgb(230 191 112 / 0.07), transparent 55%),
+    linear-gradient(135deg, #b42330 0%, #a01d29 55%, #82162a 100%);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 227 163 / 0.5),
+    0 1px 2px rgb(60 20 20 / 0.12),
+    0 18px 40px -24px rgb(60 20 20 / 0.45);
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 5px;
+    z-index: -1;
+    pointer-events: none;
+    border: 1px solid rgb(255 227 163 / 0.28);
+    border-radius: calc(1.5rem - 5px);
+  }
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      radial-gradient(1.5px 1.5px at 8% 14%, var(--fleck), transparent 60%),
+      radial-gradient(1px 1px at 22% 62%, var(--fleck), transparent 60%),
+      radial-gradient(1.5px 1.5px at 35% 28%, var(--fleck), transparent 60%),
+      radial-gradient(1px 1px at 47% 82%, var(--fleck), transparent 60%),
+      radial-gradient(2px 2px at 58% 12%, var(--fleck), transparent 60%),
+      radial-gradient(1px 1px at 66% 48%, var(--fleck), transparent 60%),
+      radial-gradient(1.5px 1.5px at 78% 24%, var(--fleck), transparent 60%),
+      radial-gradient(1px 1px at 86% 70%, var(--fleck), transparent 60%),
+      radial-gradient(2px 2px at 93% 9%, var(--fleck), transparent 60%),
+      radial-gradient(1px 1px at 14% 90%, var(--fleck), transparent 60%),
+      radial-gradient(1px 1px at 72% 92%, var(--fleck), transparent 60%),
+      radial-gradient(1.5px 1.5px at 4% 46%, var(--fleck), transparent 60%);
+    animation: twinkle 5s ease-in-out infinite alternate;
+  }
+}
+
+/*
+ * Lá vàng: vàng kim sáng chuyển xuống vàng đậm, ánh trắng ở mép trên, viền chỉ vàng, chữ nâu sơn mài.
+ * Dùng cho nút trên tấm đỏ son (biến thể nút `gold`) và ô đang chọn (nút chọn, ô giờ âm, ngày trong
+ * lịch tháng; thêm font-semibold ở chỗ dùng). Phẳng, không đổ bóng, không gạch dưới (ADR 0009). Chỗ
+ * dùng cần có class "border". Giống nhau ở chế độ sáng và tối. Trên nấc sẫm nhất (#e8c06a): chữ
+ * 8,3:1, chữ phụ 5,4:1.
+ */
+@utility gold-leaf {
+  --muted-foreground: #61400f;
+  --gold: #7a4f0c;
+  color: #45210a;
+  border-color: #d2a957;
+  background-color: #f3d58c;
+  /* Dải chéo như ánh kim, không sẫm ở mép dưới (mép dưới sẫm trông như nút nổi). */
+  background-image: linear-gradient(120deg, #ffe8b3 0%, #f5d78f 45%, #e8c06a 100%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.65);
+}
+
+/*
  * Hai quầng màu (đỏ son, vàng kim) mờ, trôi rất chậm phía sau nội dung. Đặt ở góc để chữ ở giữa vẫn
  * đạt tương phản (đỉnh quầng ≤ 8% đỏ, 18% vàng trên nền).
  */
@@ -251,6 +329,18 @@
 }
 
 /*
+ * Nền mờ và đường kẻ dưới của thanh trên, kéo ra hai bên 100vw nên luôn tràn hết bề ngang kể cả khi
+ * <main> hẹp hơn màn hình (trang form ở giữa, màn rất rộng). Phần kéo ra vẽ bằng border-image (chỉ là
+ * vẽ thêm, không làm trang cuộn ngang); bên trái nằm dưới thanh bên.
+ */
+@utility bleed-bar {
+  border-image-source: linear-gradient(to top, color-mix(in oklab, var(--border) 70%, transparent) 1px, color-mix(in oklab, var(--background) 80%, transparent) 1px);
+  border-image-slice: 0 fill;
+  border-image-width: 0;
+  border-image-outset: 0 100vw;
+}
+
+/*
  * Bề mặt nổi nhẹ: thẻ, danh sách. Bóng ấm, ở chế độ tối thay bằng viền sáng mảnh phía trên. Không
  * tự kẻ viền: thêm class "border" ở chỗ dùng để đổi màu viền theo trạng thái được.
  */
@@ -279,13 +369,15 @@
   }
   body {
     @apply bg-background text-foreground;
-    /* Ánh sáng dịu giữa mép trên, quầng vàng kim rất nhẹ ở góc, hoa văn chỉ vàng; đứng yên khi cuộn. */
+    /*
+     * Ánh sáng dịu giữa mép trên, quầng vàng kim rất nhẹ ở góc, hoa văn chỉ vàng. Cuộn theo trang
+     * (không dùng background-attachment: fixed, nặng với Safari và làm E2E WebKit chập chờn).
+     */
     background-image:
       radial-gradient(1100px 520px at 50% -220px, var(--sheen), transparent 70%),
       radial-gradient(800px 460px at 100% -120px, color-mix(in oklab, var(--gold) 10%, transparent), transparent 70%),
       var(--brocade);
     background-repeat: no-repeat, no-repeat, repeat;
-    background-attachment: fixed;
     /* Tắt kéo-để-tải-lại trong PWA. */
     overscroll-behavior-y: none;
   }

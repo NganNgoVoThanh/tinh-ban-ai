@@ -37,7 +37,7 @@ export const PLANS: Plan[] = [
       "Lá số đầy đủ theo Nam phái và Bắc phái",
       "Hôm nay: lịch âm, hoàng đạo, giờ tốt, hợp xung cả nhà",
       "Vận hạn: đại vận, lưu niên, Tứ hóa theo năm",
-      "Câu hỏi gợi ý không giới hạn, chạy cả khi offline",
+      "Câu hỏi gợi ý không giới hạn, dùng được cả khi không có mạng",
       `${FREE_DAILY_QUESTIONS} câu hỏi tự do mỗi ngày`,
       "Thẻ chia sẻ, mã hồ sơ, sao lưu ra file",
     ],

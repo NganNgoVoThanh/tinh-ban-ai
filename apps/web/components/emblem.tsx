@@ -7,6 +7,8 @@ import { cn } from "cn";
  * khi biểu tượng nằm mờ phía sau chữ.
  */
 export function Emblem({ className, spin, core = true }: { className?: string; spin?: boolean; core?: boolean }) {
+  // Làm tròn tọa độ: sin/cos trên server và trình duyệt có thể lệch ở chữ số cuối, gây lệch khi hydrate.
+  const at = (r: number, a: number, f: typeof Math.sin) => Math.round((256 + r * f(a)) * 100) / 100;
   return (
     <svg viewBox="0 0 512 512" aria-hidden="true" className={cn("shrink-0", className)}>
       <g className={spin ? "animate-spin-slow" : undefined} style={{ transformBox: "fill-box", transformOrigin: "center" }}>
@@ -17,10 +19,10 @@ export function Emblem({ className, spin, core = true }: { className?: string; s
           return (
             <line
               key={i}
-              x1={256 + 168 * Math.sin(a)}
-              y1={256 - 168 * Math.cos(a)}
-              x2={256 + r2 * Math.sin(a)}
-              y2={256 - r2 * Math.cos(a)}
+              x1={at(168, a, Math.sin)}
+              y1={at(-168, a, Math.cos)}
+              x2={at(r2, a, Math.sin)}
+              y2={at(-r2, a, Math.cos)}
               stroke="currentColor"
               strokeWidth="14"
               strokeLinecap="round"

@@ -33,12 +33,12 @@ export function HourBranchPicker({
             role="radio"
             aria-checked={branch === b}
             onClick={() => onChange(b, b === 0 ? tyPart : null)}
-            className={`flex min-h-11 flex-col items-center justify-center rounded-lg border text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-              branch === b ? "border-primary bg-primary text-primary-foreground" : `bg-card ${invalid ? "border-xung" : "border-input"}`
+            className={`flex min-h-11 flex-col items-center justify-center rounded-lg border text-sm outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-ring ${
+              branch === b ? "gold-leaf font-semibold" : `bg-card font-medium ${invalid ? "border-xung" : "border-input"}`
             }`}
           >
-            <span className="font-medium">{branchName(b)}</span>
-            <span className={`text-xs tabular-nums ${branch === b ? "" : "text-muted-foreground"}`}>{range}</span>
+            <span>{branchName(b)}</span>
+            <span className="text-xs text-muted-foreground tabular-nums">{range}</span>
           </button>
         ))}
       </div>

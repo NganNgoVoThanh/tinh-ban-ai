@@ -181,7 +181,7 @@ function ChartView({
   const codes = new Set(snapshot?.warnings.map((w) => w.code));
 
   return (
-    <main className="mx-auto flex w-full max-w-5xl flex-col gap-3 px-4 pb-8">
+    <main className="mx-auto flex w-full max-w-5xl flex-col gap-3 px-4 pb-8 lg:max-w-448 lg:px-8">
       <TopBar
         left={<ProfileSwitcher profiles={profiles} current={profile} onSelect={(p) => window.history.pushState(null, "", chartHref(p.profileId))} />}
         right={
@@ -214,15 +214,17 @@ function ChartView({
         }
       />
 
-      <Segmented<ViewMode>
-        label="Chế độ xem"
-        value={mode}
-        onChange={changeMode}
-        options={[
-          { value: "goc", label: "Gốc" },
-          { value: "van-han", label: "Vận hạn" },
-        ]}
-      />
+      <div className="lg:max-w-md">
+        <Segmented<ViewMode>
+          label="Chế độ xem"
+          value={mode}
+          onChange={changeMode}
+          options={[
+            { value: "goc", label: "Gốc" },
+            { value: "van-han", label: "Vận hạn" },
+          ]}
+        />
+      </div>
 
       {mode === "van-han" && snapshot && (
         <FortuneView
@@ -291,7 +293,7 @@ function ChartView({
         <>
           <h1 className="sr-only">Lá số của {name}</h1>
           {view === "grid" ? (
-            <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-4">
+            <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-6 xl:grid-cols-[minmax(0,1fr)_380px] 2xl:grid-cols-[minmax(0,1fr)_30rem]">
               <ChartGrid
                 palaces={snapshot.palaces}
                 labels={chartLabels}
@@ -304,7 +306,7 @@ function ChartView({
                 arrows={selection?.arrows ?? []}
                 badges={selection?.badges ?? {}}
               />
-              <div className="mt-2 flex flex-col gap-3 lg:mt-0">
+              <div className="mt-2 flex flex-col gap-3 lg:sticky lg:top-18 lg:mt-0 lg:self-start">
                 <p aria-live="polite" className="min-h-11 text-sm">
                   {selection?.summary || (profile.schoolId === "bac" ? "Chạm vào một cung để xem phi hóa từ thiên can của cung." : "Chạm vào một cung để xem tam phương tứ chính.")}
                 </p>

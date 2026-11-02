@@ -1,6 +1,6 @@
 # ADR 0007: Giao diện đỏ son – vàng kim; trang Các gói hiện gói của máy và giá dự kiến
 
-Ngày: 2026-10-31. Trạng thái: đang dùng, chờ bạn duyệt giá dự kiến và quyền lợi từng gói.
+Ngày: 2026-10-31. Trạng thái: đang dùng, chờ bạn duyệt giá dự kiến và quyền lợi từng gói. Phần nền `son`, `starfield`, nút `gold` và tờ lịch dải đỏ đã được thay bằng [ADR 0008](0008-nen-lua-nga-dat-vang-va-bo-chi-tiet-ky-thuat.md).
 
 ## Bối cảnh
 

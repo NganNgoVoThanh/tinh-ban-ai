@@ -7,7 +7,7 @@ import { ContentBlock, ContentTag, ELEMENT_CLASS, SubLabel } from "@tinhban/ui";
 import { useMemo, useState } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/sheet";
 import { trackEvent } from "@/lib/analytics";
 import { chartLabels } from "@/lib/chart-labels";
 import { KB } from "@/lib/kb";
@@ -134,7 +134,7 @@ export function PalaceDetailContent({ snapshot, palace }: { snapshot: ChartSnaps
 export const palaceTitle = (p: PalaceFacts, showStems: boolean) =>
   `${PALACES[p.key] ?? p.name}${p.isBody ? " · Thân" : ""} · ${showStems ? `${p.stem} ${p.branch}` : p.branch}`;
 
-/** Bảng kéo lên trên điện thoại; màn rộng thì chi tiết hiện ở cột phải (chart-screen). */
+/** Bảng kéo lên trên điện thoại, hộp thoại trên máy tính bảng; từ lg chi tiết hiện ở cột phải (chart-screen). */
 export function PalaceDetailSheet({
   snapshot,
   palace,
@@ -149,15 +149,15 @@ export function PalaceDetailSheet({
   onOpenChange: (open: boolean) => void;
 }) {
   return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="max-h-[92dvh]">
-        <DrawerHeader>
-          <DrawerTitle className="font-display text-2xl font-semibold">{palaceTitle(palace, showStems)}</DrawerTitle>
-        </DrawerHeader>
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent>
+        <SheetHeader>
+          <SheetTitle className="font-display text-2xl font-semibold">{palaceTitle(palace, showStems)}</SheetTitle>
+        </SheetHeader>
         <div className="mx-auto w-full max-w-140 overflow-y-auto px-4 pb-6">
           <PalaceDetailContent snapshot={snapshot} palace={palace} />
         </div>
-      </DrawerContent>
-    </Drawer>
+      </SheetContent>
+    </Sheet>
   );
 }

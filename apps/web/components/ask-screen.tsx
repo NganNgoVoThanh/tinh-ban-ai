@@ -44,6 +44,7 @@ import { useDailyQuota, writeQuota } from "@/lib/quota";
 import { askHref } from "@/lib/routes";
 import { updateSettings, useSettings } from "@/lib/settings";
 import { toIso, weekdayName } from "@/lib/today";
+import { useDesktop } from "@/lib/use-media-query";
 import { useToday } from "@/lib/use-today";
 
 const MAX_LENGTH = 300;
@@ -196,6 +197,7 @@ function AskView({ profile, profiles, door, initialQuestion }: { profile: LocalP
   const router = useRouter();
   const today = useToday();
   const online = useOnline();
+  const desktop = useDesktop();
   const snapshot = useMemo(() => chartOf(profile).snapshot, [profile]);
   const people = useMemo<Person[]>(
     () =>
@@ -326,7 +328,7 @@ function AskView({ profile, profiles, door, initialQuestion }: { profile: LocalP
     ));
 
   return (
-    <main className="mx-auto flex w-full max-w-140 flex-col gap-4 px-4">
+    <main className="mx-auto flex w-full max-w-140 flex-col gap-4 px-4 md:max-w-3xl lg:max-w-448 lg:px-8">
       <TopBar
         left={<ProfileSwitcher profiles={profiles} current={profile} onSelect={(p) => window.history.pushState(null, "", askHref(p.profileId))} />}
         right={
@@ -351,128 +353,140 @@ function AskView({ profile, profiles, door, initialQuestion }: { profile: LocalP
         }
       />
       <h1 className="sr-only">Hỏi về lá số của {name}</h1>
-
-      {history && history.length > 0 && (
-        <section aria-label="Câu hỏi gợi ý" className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
-          {suggestionButtons(false)}
-        </section>
-      )}
-
-      {history?.length === 0 && (
-        <section className="flex flex-col gap-2 animate-in fade-in slide-in-from-bottom-2 duration-500">
-          <div className="blush relative mb-1 flex items-center gap-4 overflow-hidden rounded-3xl p-5">
-            <Emblem className="size-14 text-gold" spin />
-            <div className="flex flex-col gap-1">
-              <h2 className="font-serif text-lg font-semibold">Bắt đầu bằng một câu gợi ý</h2>
-              <p className="text-sm text-muted-foreground">Câu gợi ý trả lời ngay, không tính lượt và dùng được cả khi không có mạng.</p>
-            </div>
-          </div>
-          {suggestionButtons(true)}
-        </section>
-      )}
-
-      {groups.length > 0 && (
-        <div role="region" aria-label="Lịch sử hỏi" className="flex flex-col gap-4">
-          {groups.map((g) => (
-            <section key={g.day} className="flex flex-col gap-2">
-              <h2 className="text-sm font-medium text-muted-foreground">
-                {todayIso ? dayTitle(g.day, todayIso, yesterdayIso) : formatSolar(g.day)} · {g.items.length} câu
-              </h2>
-              <Accordion
-                type="multiple"
-                value={openIds.filter((id) => g.items.some((x) => x.id === id))}
-                onValueChange={(v) => {
-                  if (v.some((id) => !openIds.includes(id))) trackEvent("qa_history_opened");
-                  setOpen([...openIds.filter((id) => !g.items.some((x) => x.id === id)), ...v]);
-                }}
-                className="flex flex-col gap-2"
-              >
-                {g.items.map((item) => (
-                  <AccordionItem key={item.id} value={item.id} className="surface rounded-2xl border px-4 last:border-b">
-                    <AccordionTrigger className="min-h-11 text-left">
-                      <span className="flex flex-col">
-                        <span className="font-medium">{item.question}</span>
-                        <span className="text-xs font-normal text-muted-foreground tabular-nums">
-                          {new Date(item.createdAt).toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })}
-                        </span>
-                      </span>
-                    </AccordionTrigger>
-                    <AccordionContent className="flex flex-col gap-2">
-                      <AnswerCard item={item} onFollowup={(q) => void send(q)} />
-                      <Button variant="ghost" size="sm" className="min-h-11 self-end text-muted-foreground" onClick={() => void deleteHistoryItem(item.id)}>
-                        <Trash2 aria-hidden /> Xóa câu này
-                      </Button>
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
+      {/* Máy tính: trái là lịch sử và ô hỏi, phải là cột câu gợi ý đứng yên khi cuộn. */}
+      <div className="flex flex-1 flex-col gap-4 lg:grid lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start lg:gap-8 2xl:grid-cols-[minmax(0,1fr)_28rem]">
+        <div className="flex flex-col gap-4">
+          {history && history.length > 0 && !desktop && (
+            <section aria-label="Câu hỏi gợi ý" className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
+              {suggestionButtons(false)}
             </section>
-          ))}
-        </div>
-      )}
+          )}
 
-      <form
-        data-ready="1"
-        className="sticky bottom-[calc(3.5rem+env(safe-area-inset-bottom))] z-10 -mx-4 mt-auto flex flex-col gap-2 border-t border-border bg-background/95 px-4 py-3 backdrop-blur md:bottom-0"
-        onSubmit={(e) => {
-          e.preventDefault();
-          void send(text);
-        }}
-      >
-        {notice && (
-          <p role="status" className={notice.kind === "refusal" ? "rounded-2xl bg-muted p-3 text-sm" : "text-sm text-xung"}>
-            {notice.text}
-          </p>
-        )}
-        {siteKey && pending && (
-          <div className="flex flex-col gap-1">
-            <p className="text-sm">Xác nhận bạn không phải máy tự động để gửi câu hỏi.</p>
-            <Turnstile siteKey={siteKey} onToken={(t) => void send(pending, t)} />
-          </div>
-        )}
-        {exhausted ? (
-          <p className="text-sm">
-            Đã hết {quota?.total} câu hôm nay ·{" "}
-            <button type="button" className="min-h-11 font-medium text-primary underline-offset-4 hover:underline" onClick={() => setInterestOpen(true)}>
-              Xem các gói
-            </button>
-          </p>
-        ) : !online ? (
-          <p className="text-sm text-muted-foreground">Đang không có mạng: câu hỏi tự do cần mạng. Câu gợi ý và lịch sử vẫn dùng được.</p>
-        ) : under16 ? (
-          <p className="text-sm text-muted-foreground">Hồ sơ dưới 16 tuổi: câu hỏi tự do chỉ được trả lời ngay trên máy, không gửi đi đâu.</p>
-        ) : null}
-        <div className="flex items-end gap-2">
-          <Textarea
-            aria-label="Câu hỏi của bạn"
-            placeholder="Hỏi điều bạn muốn biết về lá số…"
-            value={text}
-            maxLength={MAX_LENGTH}
-            rows={2}
-            disabled={inputLocked}
-            onChange={(e) => setText(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
-                e.preventDefault();
-                void send(text);
-              }
+          {history?.length === 0 && (
+            <section className="flex flex-col gap-2 animate-in fade-in slide-in-from-bottom-2 duration-500">
+              <div className="blush relative mb-1 flex items-center gap-4 overflow-hidden rounded-3xl p-5">
+                <Emblem className="size-14 text-gold" spin />
+                <div className="flex flex-col gap-1">
+                  <h2 className="font-serif text-lg font-semibold">Bắt đầu bằng một câu gợi ý</h2>
+                  <p className="text-sm text-muted-foreground">
+                    {desktop && "Chọn một câu ở bên phải hoặc gõ câu hỏi bên dưới. "}Câu gợi ý trả lời ngay, không tính lượt và dùng được cả khi không có mạng.
+                  </p>
+                </div>
+              </div>
+              {!desktop && suggestionButtons(true)}
+            </section>
+          )}
+
+          {groups.length > 0 && (
+            <div role="region" aria-label="Lịch sử hỏi" className="flex flex-col gap-4">
+              {groups.map((g) => (
+                <section key={g.day} className="flex flex-col gap-2">
+                  <h2 className="text-sm font-medium text-muted-foreground">
+                    {todayIso ? dayTitle(g.day, todayIso, yesterdayIso) : formatSolar(g.day)} · {g.items.length} câu
+                  </h2>
+                  <Accordion
+                    type="multiple"
+                    value={openIds.filter((id) => g.items.some((x) => x.id === id))}
+                    onValueChange={(v) => {
+                      if (v.some((id) => !openIds.includes(id))) trackEvent("qa_history_opened");
+                      setOpen([...openIds.filter((id) => !g.items.some((x) => x.id === id)), ...v]);
+                    }}
+                    className="flex flex-col gap-2"
+                  >
+                    {g.items.map((item) => (
+                      <AccordionItem key={item.id} value={item.id} className="surface rounded-2xl border px-4 last:border-b">
+                        <AccordionTrigger className="min-h-11 text-left">
+                          <span className="flex flex-col">
+                            <span className="font-medium">{item.question}</span>
+                            <span className="text-xs font-normal text-muted-foreground tabular-nums">
+                              {new Date(item.createdAt).toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })}
+                            </span>
+                          </span>
+                        </AccordionTrigger>
+                        <AccordionContent className="flex flex-col gap-2">
+                          <AnswerCard item={item} onFollowup={(q) => void send(q)} />
+                          <Button variant="ghost" size="sm" className="min-h-11 self-end text-muted-foreground" onClick={() => void deleteHistoryItem(item.id)}>
+                            <Trash2 aria-hidden /> Xóa câu này
+                          </Button>
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+                </section>
+              ))}
+            </div>
+          )}
+
+          <form
+            data-ready="1"
+            className="sticky bottom-[calc(3.5rem+env(safe-area-inset-bottom))] z-10 -mx-4 mt-auto flex flex-col gap-2 border-t border-border bg-background/95 px-4 py-3 backdrop-blur md:bottom-0"
+            onSubmit={(e) => {
+              e.preventDefault();
+              void send(text);
             }}
-            className="min-h-11 resize-none rounded-2xl bg-card"
-          />
-          <Button type="submit" size="icon" className="rounded-full" aria-label="Gửi câu hỏi" disabled={inputLocked || text.trim().length < 2}>
-            <ArrowUp aria-hidden />
-          </Button>
+          >
+            {notice && (
+              <p role="status" className={notice.kind === "refusal" ? "rounded-2xl bg-muted p-3 text-sm" : "text-sm text-xung"}>
+                {notice.text}
+              </p>
+            )}
+            {siteKey && pending && (
+              <div className="flex flex-col gap-1">
+                <p className="text-sm">Xác nhận bạn không phải máy tự động để gửi câu hỏi.</p>
+                <Turnstile siteKey={siteKey} onToken={(t) => void send(pending, t)} />
+              </div>
+            )}
+            {exhausted ? (
+              <p className="text-sm">
+                Đã hết {quota?.total} câu hôm nay ·{" "}
+                <button type="button" className="min-h-11 font-medium text-primary underline-offset-4 hover:underline" onClick={() => setInterestOpen(true)}>
+                  Xem các gói
+                </button>
+              </p>
+            ) : !online ? (
+              <p className="text-sm text-muted-foreground">Đang không có mạng: câu hỏi tự do cần mạng. Câu gợi ý và lịch sử vẫn dùng được.</p>
+            ) : under16 ? (
+              <p className="text-sm text-muted-foreground">Hồ sơ dưới 16 tuổi: câu hỏi tự do chỉ được trả lời ngay trên máy, không gửi đi đâu.</p>
+            ) : null}
+            <div className="flex items-end gap-2">
+              <Textarea
+                aria-label="Câu hỏi của bạn"
+                placeholder="Hỏi điều bạn muốn biết về lá số…"
+                value={text}
+                maxLength={MAX_LENGTH}
+                rows={2}
+                disabled={inputLocked}
+                onChange={(e) => setText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
+                    e.preventDefault();
+                    void send(text);
+                  }
+                }}
+                className="min-h-11 resize-none rounded-2xl bg-card"
+              />
+              <Button type="submit" size="icon" className="rounded-full" aria-label="Gửi câu hỏi" disabled={inputLocked || text.trim().length < 2}>
+                <ArrowUp aria-hidden />
+              </Button>
+            </div>
+            <p className="flex items-center justify-between gap-2 text-xs text-muted-foreground tabular-nums">
+              <span className="flex items-center gap-2">
+                <PlanBadge />
+                <span>{quota && !exhausted && !under16 ? `Còn ${quota.remaining}/${quota.total} câu hôm nay` : ""}</span>
+              </span>
+              <span>
+                {text.length}/{MAX_LENGTH}
+              </span>
+            </p>
+          </form>
         </div>
-        <p className="flex items-center justify-between gap-2 text-xs text-muted-foreground tabular-nums">
-          <span className="flex items-center gap-2">
-            <PlanBadge />
-            <span>{quota && !exhausted && !under16 ? `Còn ${quota.remaining}/${quota.total} câu hôm nay` : ""}</span>
-          </span>
-          <span>
-            {text.length}/{MAX_LENGTH}
-          </span>
-        </p>
-      </form>
+        {desktop && (
+          <aside aria-label="Câu hỏi gợi ý" className="sticky top-18 flex flex-col gap-2">
+            <h2 className="font-serif text-lg font-semibold">Câu hỏi gợi ý</h2>
+            {suggestionButtons(true)}
+          </aside>
+        )}
+      </div>
 
       <InterestSheet open={interestOpen} onOpenChange={setInterestOpen} />
       <AlertDialog open={clearOpen} onOpenChange={setClearOpen}>
